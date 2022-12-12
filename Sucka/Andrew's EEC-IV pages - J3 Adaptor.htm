@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0065)http://www.wheels.kiev.ua:8101/myford/howto/injector/j3/j3sim.htm -->
+<HTML><HEAD><TITLE>Andrew's EEC-IV pages - J3 Adaptor</TITLE>
+<META content="text/html; charset=windows-1251" http-equiv=Content-Type>
+<META content="Andrew March" name=Author>
+<META content="MSHTML 5.00.3207.2500" name=GENERATOR></HEAD>
+<BODY background="">
+<CENTER><FONT face="Comic Sans MS"><FONT color=#ffff00><FONT size=+3>Andrew's 
+EEC-IV pages</FONT></FONT></FONT> <BR><I><TT><FONT color=#003300>Last modified 
+09-Jul-99</FONT></TT></I></CENTER>
+<HR width="100%">
+
+<CENTER>
+<P><FONT face="Comic Sans MS"><FONT color=#663300><FONT size=+2>J3 service port 
+simulator</FONT></FONT></FONT></CENTER>
+<BLOCKQUOTE><I><U>What is it?</U></I></BLOCKQUOTE>
+<BLOCKQUOTE>This project lets your PC's printer port simulate the MBUS 
+  interface of the EEC-IV's J3 service port. 
+  <P>It's handy for testing home-made J3 adaptors and could also be used for 
+  extracting the ROM contents of commercial J3 adaptors. 
+  <P>This version uses a plain-vanilla unidirectional parallel printer port. 
+  Companion DOS software including source code is provided. <B><A 
+  href="http://www.wheels.kiev.ua:8101/myford/howto/injector/j3/j3s100a.zip">Download 
+  version 1.00a of the distribution package</A></B>. <BR>&nbsp; 
+  <P><I><U>What's in the distribution package?</U></I> 
+  <P>The distribution package contains the following files: 
+  <P><TT>j3sim.html&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; the page you're reading 
+  now</TT> <BR><TT>j3sim100.gif&nbsp;&nbsp;&nbsp;&nbsp; circuit diagram in GIF 
+  format</TT> <BR><TT>j3sim100.pdf&nbsp;&nbsp;&nbsp;&nbsp; circuit diagram in 
+  PDF format</TT> <BR><TT>j3sim.exe&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+  DOS executable version 1.00</TT> 
+  <BR><TT>j3sim.c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Source 
+  code module</TT> 
+  <BR><TT>j3sim.h&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Source 
+  code module</TT> 
+  <BR><TT>io.c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+  Source code module</TT> 
+  <BR><TT>io.h&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+  Source code module</TT> 
+  <BR><TT>test.c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+  Source code module</TT> 
+  <BR><TT>test.h&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+  Source code module</TT> <BR>&nbsp; 
+  <P><I><U>How does it work?</U></I> 
+  <P>Let's have a look at the circuit to understand how it works (click on the 
+  image to enlarge): 
+  <P><A href="Andrew's EEC-IV pages - J3 Adaptor_files/j3sim100.gif"><IMG 
+  border=1 height=452 
+  src="Andrew's EEC-IV pages - J3 Adaptor_files/j3sim100.gif" width=640></A> 
+  <BR>&nbsp; 
+  <P>First, note that the J3 connector is actually a contact finger pattern same 
+  as on the EEC-IV PCB. It is NOT an edge connector socket. Remember, this is a 
+  J3 port simulator and as such is intended to mate with the edge connector 
+  socket on the <I>other</I> device that is designed to attach to an EEC-IV. 
+  <P>MBUS data bytes are emitted by the PC on printer port data output lines 
+  PD0:7 and presented to the MBUS device via series resistors R9-16 as MB0:7. 
+  <P>Printer port control outputs are used to provide DI, IT and ST MBUS 
+  controls. The ST signal is passed through schmitt trigger U2 to remove any 
+  ringing due to transmission line effects caused by the ribbon cable from the 
+  PC. 
+  <P>Multiplexer chip U1 lets the PC read MBUS data bytes as two separate 
+  nibbles via just four printer status input lines. When reading, the printer 
+  port data lines PD0:7 are driven high and the series resistors R9-16 act as 
+  pull-ups. 
+  <P>An external 5V supply is required to power this simulator and the J3 
+  adaptor or other device connected to it. <BR>&nbsp; 
+  <P><I><U>Construction notes</U></I> 
+  <P>Notice how all of the signals go to just the odd-numbered side of the MBUS 
+  connector? That means the circuit can be built on a piece of single-side strip 
+  board, and the copper on the strip board can be used as the contact finger 
+  pattern. The board should be used copper side up so that the odd-numbered 
+  contact finger "pins" are oriented the same way as an EEC's J3 port. Of 
+  course, this only works if the J3 adaptor or other device that plugs onto the 
+  contact finger pattern does not need GND or +5V connected to any of the 
+  even-numbered contacts. <BR>&nbsp; 
+  <P><I><U>Using the software</U></I> 
+  <P>The software runs under DOS or in a DOS box under Windows. It probably 
+  doesn't work with Windows NT. 
+  <P>Type <B><TT>j3sim</TT></B> at the DOS prompt to start running in menu mode. 
+  Type <B><TT>j3sim -h</TT></B> to get a list of options for command line mode. 
+  <P>The code will compile under Borland C version 3.1, the old DOS version. 
+  <BR>&nbsp; 
+  <P><I><U>Known bugs and future work</U></I> 
+  <P>1. Due to the 10k resistors R9-R16 in series with the data lines from the 
+  PC, this design is not really suitable for driving LS TTL logic devices and 
+  should only be used with J3 adaptors that use HCMOS logic or PLDs. Watch out 
+  for pull-ups or pull-downs on the J3 adaptor. 
+  <P>2. This version is designed for use with a unidirectional printer port. The 
+  hardware could be drastically simplified if a bi-directional printer port is 
+  available. In this case U1 could be omitted and R9-R16 could then be reduced 
+  to say 220 ohms (it is desirable to retain some protection against both the PC 
+  and the adpator driving out data at the same time). Of course, the software 
+  will also need change.</P></BLOCKQUOTE>
+<CENTER>
+<HR width="100%">
+<BR><U><FONT color=#3333ff><A 
+href="http://www.wheels.kiev.ua:8101/myford/howto/injector/j3/index.htm">Back to 
+home page</A></FONT></U></CENTER></BODY></HTML>

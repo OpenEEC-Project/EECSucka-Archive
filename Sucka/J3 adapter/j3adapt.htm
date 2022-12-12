@@ -1,0 +1,95 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Andrew March">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Andrew's EEC-IV pages - J3 Adaptor</title>
+</head>
+
+<body background="green_st.gif">
+
+<p align="center"><font color="#FFFF00" size="6"
+face="Comic Sans MS">Andrew's EEC-IV pages</font> <br>
+<font color="#003300"><i><tt>Last modified 28-Aug-99</tt></i></font>
+</p>
+
+<hr>
+
+<p align="center"><font color="#663300" size="5"
+face="Comic Sans MS">Homebrew J3 adaptor</font> </p>
+
+<blockquote>
+    <p>Modifying an EEC-IV engine calibration is complicated by
+    two factors: (1) the contents of the internal ROM cannot be
+    changed in situ and (2) the ROM is a Ford proprietary design
+    that is incompatible with readily available programmer units.
+    </p>
+    <p>But don't let that stop you. </p>
+    <p>The traditional solution is to attach an external ROM to
+    the J3 service port. The service port carries all the signals
+    needed to interface to the MBUS multiplexed bus that runs
+    between the EEC-IV's 8061 microcontroller and its ROM and RAM
+    chips. </p>
+    <p>Although quite a deal of logic is needed to interface the
+    MBUS to a common ROM such as a 27C512, it can all be squeezed
+    into a single programmable logic device. </p>
+    <p>This project is based on a <a href="j3.pdf"><b>J3 adaptor
+    design using 74HC logic</b></a> posted by Kevin Timmermann. </p>
+    <p>To check out whether that design worked properly I first
+    entered it into a Xilinx EPLD development system and
+    performed a functional simulation. Here is the <a
+    href="ea100-5.pdf"><b>simulation timing chart</b></a>. Some
+    surprises: the DAR contents get clobbered when the RPC is
+    loaded, but that doesn't matter if the 8061 micro in the
+    EEC-IV always reloads the DAR immediately before using it to
+    access ROM data. </p>
+    <p>And so to the soldering iron... </p>
+    <p><i>Top and bottom views of my prototype:</i> </p>
+    <p><img src="ea100t_2.jpg" width="412" height="213"> <br>
+    &nbsp; </p>
+    <p><img src="ea100b_2.jpg" width="397" height="208"> <br>
+    &nbsp; <br>
+    &nbsp; </p>
+    <p><i>Wiring diagram:</i> </p>
+    <p><img src="ea100w_2.gif" width="825" height="562"> </p>
+    <p><b>IMPORTANT: </b>Although not shown in the wiring diagram
+    above, add 100 ohm in series with 47 to 100pF between IC1 pin
+    42 and ground to prevent ringing on ST. This is especially
+    important if a length of ribbon cable is used to connect
+    between this adaptor and the EEC's J3 connector. </p>
+    <p>Here is the <a href="ea100.zip"><b>programming file for
+    the EPLD</b></a>. To program the EPLD you will need a JTAG
+    download cable such as my <a
+    href="http://www.icenet.com.au/~amarch/eztag.htm"><b>EZTag</b></a>
+    design. The EPLD is programmed after it is inserted into its
+    socket on the J3 adaptor (do not insert the 27C512 yet). To
+    program, apply +5V from an external power supply, connect the
+    download cable between the JTAG header and PC then run the
+    EZTag companion software. </p>
+    <p>To program the 27C512 you obviously need an engine
+    calibration to load into it. This is where the <a
+    href="http://www.icenet.com.au/~amarch/eecsucka.htm"><b>EECSucka</b></a>
+    comes into the picture. Use the EECSucka to extract the
+    original calibration from your EEC-IV. The original
+    calibration provides the basis for any modifications you
+    choose to carry out. </p>
+    <p>WARNING: by default the EECSucka dumps 32kB, but it is
+    suggested to dump the entire 56kB from address $2000 to $FFFF
+    in case your EEC-IV ROM actually has code in this area. See
+    the EECSucka help screen on details on how to use the -s
+    option to over-ride the EECSucka's default 32kB limit. </p>
+    <p>The 27C512 is then programmed in any ordinary EPROM
+    programmer unit. The only special procedure is to offset the
+    programming file by 2000hex locations. That is, the first
+    byte in the programming file goes to location $2000 in the
+    ROM. Remember to put a sticker over the ROM window to stop
+    incident light causing a misread (it happens). </p>
+</blockquote>
+
+<hr>
+
+<p align="center">&nbsp;</p>
+</body>
+</html>

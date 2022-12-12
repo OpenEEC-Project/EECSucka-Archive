@@ -1,0 +1,137 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Andrew March">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Andrew's EEC-IV pages - EECSucka</title>
+</head>
+
+<body background="green_st.gif">
+
+<p align="center"><font color="#FFFF00" size="6"
+face="Comic Sans MS">Andrew's EEC-IV pages</font> <br>
+<font color="#003300"><i><tt>Last modified 09-Apr-00</tt></i></font>
+</p>
+
+<hr>
+
+<p align="center"><font color="#990000" size="5"
+face="Comic Sans MS">EECSucka ROM dumpers</font></p>
+
+<p>A ROM dumper lets you copy the contents of your EEC's ROM to
+your hard disk. This is handy for getting a binary image to
+analyse for locations of maps and other calibration data, or to
+obtain a binary image for loading into an external ROM J3 adaptor.</p>
+
+<p><font color="#000000"><strong>Please note</strong>: the
+EECSucka just extracts a copy of your existing EEC ROM contents.
+It <b>DOES NOT</b> allow you to do any direct tuning of the
+engine calibration. It <b>DOES NOT </b>allow you to change the
+contents of the EEC's ROM. </font></p>
+
+<p>The hardware described on this page is designed to work with
+any PC that has a plain-vanilla unidirectional printer port.
+Companion software is compiled with Borland C++ v3.1 and runs
+under DOS or in a DOS box under Windows 95.</p>
+
+<hr>
+
+<p><strong>Original EECSucka (EEC-IV only)</strong></p>
+
+<p>The original EECSucka uses an auxiliary TSTSTB pin on the J3
+port to increment an address counter within the ROM. This method
+does not appear to work with the EEC-V. The software is capable
+of dumping the 56kB block of ROM from location 0x2000 to 0xFFFF.</p>
+
+<p>Here is a distribution kit for the <a href="eecsk300.zip"><strong>Original
+EECSucka</strong></a><strong> </strong>containing hardware plans,
+and software including source code. See within for further
+explanation. Note that this design is the same as the PCB version
+obtained by several members of the EEC-IV mailing list.</p>
+
+<p align="center"><img src="e303top2.jpg" border="1" width="409"
+height="293"></p>
+
+<p align="center"><em>PCB version of the original EECSucka</em></p>
+
+<hr>
+
+<p><strong>Son of EECSucka (EEC-V)</strong></p>
+
+<p>This version dumps the entire ROM by taking full control of
+the MBUS including the BS0 and BS3 bank select pins. The software
+is capable of dumping the full 224kB in a four-bank EEC-V. </p>
+
+<p>Here is a step by step description of the dumping process:</p>
+
+<blockquote>
+    <p>0. PAUSE and RST are tied to ground permanently and power
+    is applied.</p>
+    <p>1. Start with MRST high, DI high, IT high, ST high and MB0-7
+    from the dumper in tri-state</p>
+    <p>2. Set BS0 and BS3 to either 01, 10, 00 or 11 to select
+    required bank</p>
+    <p>3. Bring MRST low</p>
+    <p>4. Bring DI low to give control of MB0-7 to the dumper</p>
+    <p>5. Place byte 0x00 onto MB0-7</p>
+    <p>6. Generate low pulse on ST and return it high</p>
+    <p>7. Place byte 0x00 onto MB0-7 (ie no change from steps 5
+    and 6)</p>
+    <p>8. Generate low pulse on ST and return it high</p>
+    <p>9. Place byte 0x20 onto MB0-7</p>
+    <p>10. Generate low pulse on ST and return it high</p>
+</blockquote>
+
+<p>At this point the Slave Program Counter inside the ROM is
+loaded with address 0x2000 of the selected bank. This is the
+first location of the program memory in each bank. Note: at the
+moment I am not entirely sure why loading a 16-bit address
+counter requires ST to be pulsed three times. Perhaps the first
+ST pulse causes BS0/BS3 to be latched. </p>
+
+<blockquote>
+    <p>11. Bring DI high to give control of MB0-7 to the ROM</p>
+</blockquote>
+
+<p>At this point the EEC is driving out the byte at address 0x2000
+of the selected bank</p>
+
+<blockquote>
+    <p>12. Bring MRST high</p>
+</blockquote>
+
+<p>To get the next byte at address 0x2001 simply increment the
+SPC address counter in the ROM by pulsing ST low again. Keep
+pulsing ST to get subsequent bytes until the whole 56kB from 0x2000
+to 0xFFFF in the current bank has been retrieved.</p>
+
+<p>To get the contents of the next bank, simply repeat the
+numbered procedure above from step 1 using a different bank
+selection code.&nbsp; </p>
+
+<p>The hardware design of the dumper is a little bit sneaky.
+Notice that initialising the Slave Program Counter involves
+writing either the value 0x00 or 0x20 on to the MBUS at various
+times. In other words, the dumper only has to control just one
+bit (MB5) to generate these two values. This is achieved by a
+single latch output that sets the value of MB5 via a 10K resistor
+while the remaining bits (MB0-4, 6, 7) are held at logic zero by
+pulling them down through 10K resistors.</p>
+
+<p>Here is a distribution kit for <a href="eecsk501.zip"><strong>Son
+of EECSucka</strong></a><strong> </strong>containing schematic
+and software including source code. </p>
+
+<p>The hardware design is based on a manual modification of the
+original EECSucka PCB above. Differences can be determined by
+comparing the schematic drawings supplied in each of the
+distribution kits.</p>
+
+<hr>
+
+<p align="center"><a href="index.htm"><font color="#3333FF"><u>Back
+to home page</u></font></a> </p>
+</body>
+</html>

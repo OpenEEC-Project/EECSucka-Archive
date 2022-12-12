@@ -1,0 +1,25 @@
+"eeciv.zip" is freeware by Mike Kearny for viewing EECIV bins.
+ 
+     I have enclosed a zip file for installing the EECSucka GUI I wrote.  
+     You can read scalars, functions, and tables, if you know the address, 
+     size, scaling factor(s), and data type of the data.  You can't view 
+     the entire file at one time due to limitations with VB string size, I 
+     will change this in a future version.  Once you download and install 
+     the program once, you just need to install the .exe file (200kB) for 
+     each new revision I come out with.  The program isn't finished 
+     product, but its meant to be a free tool to anyone who needs it.  
+     
+     I would appreciate anyone using this, emailing me so I know how it 
+     works and how many people are using it.  I would also like to know how 
+     to make the file better.  I am thinking on focusing on cracking the 
+     bin files by writing different search alogrithims, but I need to get 
+     more data on bin files.
+     
+     Please email me at 
+     
+     mike.kearny@adept.com (work)
+     or mikearny@pacbellnet (home)
+     
+     Thanks
+     
+     Mike Kearny
